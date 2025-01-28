@@ -11,6 +11,8 @@ class ENVIRONMENT:
         self.domain = os.getenv("DOMAIN")
         self.port = os.getenv("PORT")
         self.prefix = os.getenv("PREFIX")
+        self.env = os.getenv("APP_ENV")
+        self.version = os.getenv("VERSION")
 
     def get_instance(self):
         if not hasattr(self, "_instance"):
@@ -26,10 +28,18 @@ class ENVIRONMENT:
     def getPrefix(self):
         return self.prefix
 
+    def getEnv(self):
+        return self.env
+
+    def getVersion(self):
+        return self.version
+
 
 domain = ENVIRONMENT().get_instance().getDomain()
 port = ENVIRONMENT().get_instance().getPort()
 prefix = ENVIRONMENT().get_instance().getPrefix()
+env = ENVIRONMENT().get_instance().getEnv()
+version = ENVIRONMENT().get_instance().getVersion()
 
 
 def build_swagger_config_json():
@@ -37,6 +47,9 @@ def build_swagger_config_json():
 
     with open(config_file_path, 'r') as file:
         config_data = json.load(file)
+
+    config_data['info']['description'] = f"Current Environment: {env}"
+    config_data['info']['version'] = f"API v.{version}"
 
     config_data['servers'] = [
         {"url": f"http://localhost:{port}{prefix}"},

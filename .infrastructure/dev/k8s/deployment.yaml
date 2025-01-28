@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dkosh-dev-app
+  labels:
+    app: dkosh-dev-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dkosh-dev-app
+  template:
+    metadata:
+      labels:
+        app: dkosh-dev-app
+    spec:
+      containers:
+        - name: dkosh-dev-app
+          image: 443370672158.dkr.ecr.us-east-1.amazonaws.com/dkosh-dev-app:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: APP_ENV
+              value: "dev"
+            - name: PORT
+              value: "80"
+      nodeSelector:
+        kubernetes.io/instance-type: "t3.micro"
